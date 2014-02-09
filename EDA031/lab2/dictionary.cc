@@ -43,20 +43,24 @@ Dictionary::Dictionary() {
  	}
 }
 
-void add_trigram_suggestions(const string& word){
+void Dictionary::add_trigram_suggestions(const string& word){
 	size_t wordLength = word.size()-1;
-	suggestions = vector<string>;
+	//suggestions = vector<string>;
 	for(size_t i = 0; i < 3; i++){
 		wordLength = wordLength + i;
-		if(size == 0 || size > max_word_length){
+		if(wordLength == 0 || wordLength > max_word_length){
 			break;
 		}
 		for(Word w : words[wordLength]){
-			if(w.get_matches(word.) > 1){
+			if(w.get_matches(word) > 2){
 				suggestions.push_back(word);
 			}
 		}
 	}
+}
+
+void rank_suggestions(){
+
 }
 
 
