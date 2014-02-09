@@ -28,6 +28,6 @@ unsigned int Word::get_matches(const vector<string>& t) const {
 	return 0;
 }
 
-vector<std:string> Word::get_trigrams(){
+vector<string> Word::get_trigrams(){
 	return trigrams;
 }

@@ -45,21 +45,32 @@ Dictionary::Dictionary() {
 
 void Dictionary::add_trigram_suggestions(const string& word){
 	size_t wordLength = word.size()-1;
+
+	//todo flytta till metod
+	vector<string> word_trigrams;
+ 	for(unsigned int i = 0; i  < word.size()-2 ;i++){
+ 		word_trigrams.push_back(word.substr(i,3));
+	}
+	std::sort(word_trigrams.begin(),word_trigrams.end());
+
+
 	//suggestions = vector<string>;
 	for(size_t i = 0; i < 3; i++){
 		wordLength = wordLength + i;
 		if(wordLength == 0 || wordLength > max_word_length){
 			break;
 		}
-		for(Word w : words[wordLength]){
-			if(w.get_matches(word) > 2){
-				suggestions.push_back(word);
+		vector<Word> word_list = words[wordLength];
+		for(size_t j = 0; j < word_list.size();j++){
+			Word w = word_list[j];
+			if(w.get_matches(word_trigrams) > 2){
+				suggestions.push_back(w);
 			}
 		}
 	}
 }
 
-void rank_suggestions(){
+void Dictionary::rank_suggestions(){
 
 }
 
@@ -69,6 +80,6 @@ bool Dictionary::contains(const string& word) const {
 	//return words[word.size()].find(word) != words.end();;
 }
 
-vector<string> Dictionary::get_suggestions(const string& word) const {
+vector<Word> Dictionary::get_suggestions(const string& word) const {
 	return suggestions;
 }
