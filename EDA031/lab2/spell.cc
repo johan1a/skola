@@ -10,6 +10,7 @@ using namespace std;
 int main() {
 	Dictionary dict;
 	string word;
+
 	// while (cin >> word) {
 	// 	transform(word.begin(), word.end(), word.begin(), ::tolower);
 	// 	if (dict.contains(word)) {

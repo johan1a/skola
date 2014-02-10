@@ -71,7 +71,53 @@ void Dictionary::add_trigram_suggestions(const string& word){
 }
 
 void Dictionary::rank_suggestions(){
+	string test1 = "test1";
+	string test2 = "test2";
 
+	testp = test1;
+	testq = test2;
+
+	//delete(d);
+	//d[26][26];
+	cout <<"tjaaa"<<endl;
+	cout << distance(testp.size(),testq.size());
+}
+
+int Dictionary::distance(int i, int j){
+	if(i == 0 && j == 0 || i < 0  || j < 0){
+		return 0;
+	}
+
+	if(j == 0){
+		return i;
+	}else if(i == 0){
+		return j;
+	}
+
+	int a,b,c,min;
+
+	if(testp.at(i) == testq.at(j)){
+		a = distance(i-1,j-1);
+	}else{
+		a = distance(i-1,j-1) + 1;
+	}
+	b = distance(i-1,j)+1;
+	c = distance(i,j-1)+1;
+
+	if(a < b){
+		if(a < c){
+			min = a;
+		}else{
+			min = c;
+		}
+	}else if(b < c){
+		min = c;
+	}else{
+		min = b;
+	}
+
+	d[i][j] = min;
+	return min;
 }
 
 
