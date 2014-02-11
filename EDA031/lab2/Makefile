@@ -17,12 +17,12 @@ LDFLAGS =   -g
 #LDFLAGS +=  -stdlib=libc++
 
 # Targets
-PROGS = wordFileCreator spell 
+PROGS = word_file_creator spell 
 
 all: $(PROGS)
 
 # Targets rely on implicit rules for compiling and linking
-wordFileCreator: wordFileCreator.o
+wordFileCreator: word_file_creator.o
 spell: spell.o dictionary.o word.o
 
 # Phony targets
@@ -31,7 +31,7 @@ spell: spell.o dictionary.o word.o
 # Standard clean
 clean:
 	rm -f *.o $(PROGS)
-
+	rm *.d
 # Generate dependencies in *.d files
 %.d: %.cc
 	@set -e; rm -f $@; \
