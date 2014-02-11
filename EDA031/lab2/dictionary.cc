@@ -9,50 +9,36 @@
 using namespace std;
 
 Dictionary::Dictionary() {
-	const char* inFileName = "words.txt";
-	ifstream infile(inFileName);
+	ifstream infile("words.txt");
+	string word,trigram;
+	int nbrTrigrams;
 
-	string line,word;
-	char c;
- 	while(infile.peek() != EOF){
- 		getline(infile,line);
- 		word = "";
- 		size_t i = 0;
- 		c = line.at(i);
-
- 		while(c != ' '){
- 			word = word + c;
- 			i++;
- 			c = line.at(i);
- 		}
-
- 		i += 2; // skip number of trigrams
-
- 		string trigram;
- 		vector<string> trigrams;
- 		while(i < line.size()){
- 			trigram = "";
- 			while(c != ' '){
- 				trigram = trigram + c;
- 				i++;
- 				c = line.at(i);
- 			}
- 			trigrams.push_back(trigram);
- 		}
+	while(infile >> word){
+		infile >> nbrTrigrams;
+		vector<string> trigrams;
+		for(int i = 0; i < nbrTrigrams; i++){
+			infile >> trigram;
+			trigrams.push_back(trigram);
+		}
 		words[word.size()].push_back(Word(word,trigrams));
- 	}
+	}
 }
 
-vector<Word> Dictionary::get_suggestions(const string& word) const {
+vector<string> Dictionary::get_suggestions(const string& word) const {
 	vector<Word> suggestions;
 	add_trigram_suggestions(suggestions, word);
 	rank_suggestions(suggestions, word);
 	trim_suggestions(suggestions);
-	return suggestions;
+
+	vector<string> result;
+	for(size_t i = 0; i  < suggestions.size() ;i++){
+		result.push_back(suggestions[i].get_word());
+	}
+	return result;
 }
 
 void Dictionary::add_trigram_suggestions(vector<Word>& suggestions, const string& word) const{
-	size_t wordLength = word.size()-1;
+	size_t wordLength = word.size();
 
 	//todo flytta till metod
 	vector<string> word_trigrams;
@@ -61,20 +47,18 @@ void Dictionary::add_trigram_suggestions(vector<Word>& suggestions, const string
 	}
 	std::sort(word_trigrams.begin(),word_trigrams.end());
 
-	//suggestions = vector<string>;
-	for(size_t i = 0; i < 3; i++){
-		wordLength = wordLength + i;
-		if(wordLength == 0 || wordLength > max_word_length){
-			break;
-		}
-		vector<Word> word_list = words[wordLength];
-		for(size_t j = 0; j < word_list.size();j++){
-			Word w = word_list[j];
-			if(w.get_matches(word_trigrams) > 2){
-				suggestions.push_back(w);
+	for(size_t i = wordLength-1; i < wordLength + 2; i++){
+		if(i > 0 && i < max_word_length){
+			vector<Word> word_list = words[i];
+			for(size_t j = 0; j < word_list.size();j++){
+				Word w = word_list[j];
+				if(w.get_matches(word_trigrams) > word_trigrams.size()/2){
+					suggestions.push_back(w);
+				}
 			}
 		}
 	}
+
 }
 
 struct Distance_Comparator {
@@ -133,14 +117,13 @@ void Dictionary::rank_suggestions(vector<Word>& suggestions, const string& word)
 }
 
 void Dictionary::trim_suggestions(vector<Word>& suggestions) const{
-	// if(suggestions.size()> 5){
-	// 	suggestions.resize(5);
-	// }
+	if(suggestions.size()> 5){
+		suggestions.resize(5);
+	}
 }
 
 bool Dictionary::contains(const string& word) const {
-	for(size_t i = 0; i < max_word_length; i++){
-		vector<Word> v = words[i];
+		vector<Word> v = words[word.size()];
 		string s;
 		for(size_t j = 0; j < v.size(); j++){
 			s = v[j].get_word();
@@ -148,6 +131,5 @@ bool Dictionary::contains(const string& word) const {
 				return true;
 			}
 		}
-	}
-	return  false;
+	return false;
 }

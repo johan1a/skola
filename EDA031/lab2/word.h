@@ -6,6 +6,8 @@
 
 class Word {
 public:
+	/* Default constructor for vector rezising */
+	Word();
 	/* Creates a word w with the sorted trigrams t */
 	Word(const std::string& w, const std::vector<std::string>& t);
 	

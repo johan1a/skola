@@ -10,7 +10,7 @@ class Dictionary {
 public:
 	Dictionary();
 	bool contains(const std::string& word) const;
-	std::vector<Word> get_suggestions(const std::string& word) const;
+	std::vector<std::string> get_suggestions(const std::string& word) const;
 
 private:
 	static const size_t max_word_length = 25;
