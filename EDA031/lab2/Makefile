@@ -7,9 +7,9 @@ CC  = g++
 # Define preprocessor, compiler, and linker flags. Uncomment the # lines
 # if you use clang++ and wish to use libc++ instead of GNU's libstdc++.
 # -g is for debugging.
-CPPFLAGS =  -std=c++0x
+CPPFLAGS =  -std=c++11
 CXXFLAGS =  -O2 -Wall -Wextra -pedantic-errors -Wold-style-cast 
-CXXFLAGS += -std=c++0x 
+CXXFLAGS += -std=c++11 
 CXXFLAGS += -g
 LDFLAGS =   -g 
 #CPPFLAGS += -stdlib=libc++
@@ -17,14 +17,13 @@ LDFLAGS =   -g
 #LDFLAGS +=  -stdlib=libc++
 
 # Targets
-PROGS = wordFileCreator spell
+PROGS = wordFileCreator spell 
 
 all: $(PROGS)
 
 # Targets rely on implicit rules for compiling and linking
 wordFileCreator: wordFileCreator.o
 spell: spell.o dictionary.o word.o
-
 
 # Phony targets
 .PHONY: all clean

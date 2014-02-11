@@ -43,7 +43,15 @@ Dictionary::Dictionary() {
  	}
 }
 
-void Dictionary::add_trigram_suggestions(const string& word){
+vector<Word> Dictionary::get_suggestions(const string& word) const {
+	vector<Word> suggestions;
+	add_trigram_suggestions(suggestions, word);
+	rank_suggestions(suggestions, word);
+	trim_suggestions(suggestions);
+	return suggestions;
+}
+
+void Dictionary::add_trigram_suggestions(vector<Word>& suggestions, const string& word) const{
 	size_t wordLength = word.size()-1;
 
 	//todo flytta till metod
@@ -52,7 +60,6 @@ void Dictionary::add_trigram_suggestions(const string& word){
  		word_trigrams.push_back(word.substr(i,3));
 	}
 	std::sort(word_trigrams.begin(),word_trigrams.end());
-
 
 	//suggestions = vector<string>;
 	for(size_t i = 0; i < 3; i++){
@@ -70,62 +77,77 @@ void Dictionary::add_trigram_suggestions(const string& word){
 	}
 }
 
-void Dictionary::rank_suggestions(){
-	string test1 = "test1";
-	string test2 = "test2";
+struct Distance_Comparator {
+	const string& word;
+	string word_to_compare;   
+	int d[26][26];
 
-	testp = test1;
-	testq = test2;
+    Distance_Comparator(const string& w) : word(w){}
 
-	//delete(d);
-	//d[26][26];
-	cout <<"tjaaa"<<endl;
-	cout << distance(testp.size(),testq.size());
-}
+    bool operator () ( const Word & sugg1, const Word & sugg2 ) {
+    	word_to_compare = sugg1.get_word();
+		int d_1 =  distance(word_to_compare.size(),word.size());
 
-int Dictionary::distance(int i, int j){
-	if(i == 0 && j == 0 || i < 0  || j < 0){
-		return 0;
+		word_to_compare = sugg2.get_word();
+		int d_2 = distance(word_to_compare.size(),word.size());
+		return d_1 >= d_2;
 	}
 
-	if(j == 0){
-		return i;
-	}else if(i == 0){
-		return j;
-	}
-
-	int a,b,c,min;
-
-	if(testp.at(i) == testq.at(j)){
-		a = distance(i-1,j-1);
-	}else{
-		a = distance(i-1,j-1) + 1;
-	}
-	b = distance(i-1,j)+1;
-	c = distance(i,j-1)+1;
-
-	if(a < b){
-		if(a < c){
-			min = a;
-		}else{
-			min = c;
+	int distance(int i, int j){
+		if(j == 0){
+			return i;
+		}else if(i == 0){
+			return j;
 		}
-	}else if(b < c){
-		min = c;
-	}else{
-		min = b;
-	}
 
-	d[i][j] = min;
-	return min;
+		int a,b,c,min;
+
+		if(word_to_compare.at(i-1) == word.at(j-1)){
+			a = distance(i-1,j-1);
+		}else{
+			a = distance(i-1,j-1) + 1;
+		}
+		b = distance(i-1,j)+1;
+		c = distance(i,j-1)+1;
+
+		if(a < b){
+			if(a < c){
+				min = a;
+			}else{
+				min = c;
+			}
+		}else if(b < c){
+			min = c;
+		}else{
+			min = b;
+		}
+
+		d[i][j] = min;
+		return min;
+	}
+};
+
+
+void Dictionary::rank_suggestions(vector<Word>& suggestions, const string& word) const{
+	sort(suggestions.begin(),suggestions.end(),Distance_Comparator(word));
 }
 
+void Dictionary::trim_suggestions(vector<Word>& suggestions) const{
+	// if(suggestions.size()> 5){
+	// 	suggestions.resize(5);
+	// }
+}
 
 bool Dictionary::contains(const string& word) const {
-	return false;
-	//return words[word.size()].find(word) != words.end();;
-}
-
-vector<Word> Dictionary::get_suggestions(const string& word) const {
-	return suggestions;
+	for(size_t i = 0; i < max_word_length; i++){
+		vector<Word> v = words[i];
+		string s;
+		for(size_t j = 0; j < v.size(); j++){
+			s = v[j].get_word();
+			if(word == s){
+				return true;
+			}
+		}
+	}
+	return  false;
 }
