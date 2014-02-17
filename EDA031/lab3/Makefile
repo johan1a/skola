@@ -17,13 +17,14 @@ LDFLAGS =   -g
 #LDFLAGS +=  -stdlib=libc++
 
 # Targets
-PROGS = sieve htmlreader 
+PROGS = sieve htmlreader date_test
 
 all: $(PROGS)
 
 # Targets rely on implicit rules for compiling and linking
 htmlreader: htmlreader.o tagremover.o
 sieve: sieve.o
+date_test: date_test.o date.o
 
 # Phony targets
 .PHONY: all clean
