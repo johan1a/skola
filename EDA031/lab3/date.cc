@@ -23,10 +23,10 @@ istream& operator>>(istream& is, Date& date){
 	int y_int = atoi(y.c_str());
 	int m_int = atoi(m.c_str());
 	int d_int = atoi(d.c_str());
-
 	if(y_int >= 1 && y_int <= 9999 && m_int >= 1 && m_int <= 12 
-		&& d_int > 1 && d_int <= Date::daysPerMonth[d_int]){
+		&& d_int > 1 && d_int <= Date::daysPerMonth[m_int-1]){
 		date = Date(y_int, m_int, d_int);
+		is.setstate(ios_base::goodbit);
 	}else{
 		is.setstate(ios_base::badbit);
 	}
