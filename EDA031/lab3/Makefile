@@ -17,7 +17,7 @@ LDFLAGS =   -g
 #LDFLAGS +=  -stdlib=libc++
 
 # Targets
-PROGS = sieve htmlreader date_test
+PROGS = sieve htmlreader date_test to_string_test
 
 all: $(PROGS)
 
@@ -25,6 +25,7 @@ all: $(PROGS)
 htmlreader: htmlreader.o tagremover.o
 sieve: sieve.o
 date_test: date_test.o date.o
+to_string_test: to_string_test.o date.o
 
 # Phony targets
 .PHONY: all clean
