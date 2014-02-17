@@ -72,4 +72,3 @@ void Date::next() {
 		day++;
 	}
 }
-
