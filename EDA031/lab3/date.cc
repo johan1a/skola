@@ -15,19 +15,34 @@ Date::Date() {
 
 Date::Date(int y, int m, int d) : year(y), month(m), day(d) {}
 
-istream& operator>>(istream& is, Date date){
+istream& operator>>(istream& is, Date& date){
 	string y,m,d;
 	getline(is,y,'-');
 	getline(is,m,'-');
 	getline(is,d);
-	date.year = atoi(y.c_str());
-	date.month = atoi(m.c_str());
-	date.day = atoi(d.c_str());
+	int y_int = atoi(y.c_str());
+	int m_int = atoi(m.c_str());
+	int d_int = atoi(d.c_str());
+	if(y_int >= 1 && y_int <= 9999 && m_int >= 1 && m_int <= 12 
+		&& d_int > 1 && d_int <= Date::daysPerMonth[m_int-1]){
+		date = Date(y_int, m_int, d_int);
+		is.setstate(ios_base::goodbit);
+	}else{
+		is.setstate(ios_base::badbit);
+	}
 	return is;
 }
 
 ostream& operator<<(ostream& os, const Date date){
-	os << date.getYear() << '-' << date.getMonth() << '-' << date.getDay();
+	os << date.getYear() << '-';
+	if(date.getMonth() < 10){
+		os << 0;
+	}
+	os << date.getMonth() << '-'; 
+	if(date.getDay() < 10){
+		os << 0;
+	}
+	os << date.getDay(); 
 	return os;
 }
 
@@ -57,4 +72,3 @@ void Date::next() {
 		day++;
 	}
 }
-
